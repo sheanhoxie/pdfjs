@@ -44,7 +44,7 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
 function theme_pdf_formatter_default($variables) {
   $file_url = url('/file/' . $variables['file']['fid']);
 
-  $content = '<iframe name="pdf-reader" id="pdf-reader" frameborder="no" scrolling="no" width="99%" height="600px" src="';
+  $content = '<iframe name="pdf-reader" id="pdf-reader" frameborder="no" width="99%" height="600px" src="';
   $content .=  $file_url . '/fullscreen';
   $content .= '"></iframe>';
   return $content;
