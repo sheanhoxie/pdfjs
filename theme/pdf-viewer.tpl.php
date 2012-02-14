@@ -5,7 +5,6 @@
         if (module_exists('admin_menu')) {
           admin_menu_suppress();
         }
-        print($variables);
       ?>
       <?php //print drupal_get_html_head(); ?>
       <?php //print drupal_get_css(); ?>
@@ -14,7 +13,10 @@
       <script type="text/javascript" src="<?php print $GLOBALS['base_url']?>/sites/all/libraries/pdf.js/build/pdf.js"></script>
       <script type="text/javascript">PDFJS.workerSrc = '<?php print $GLOBALS['base_url']?>/pdf/worker_loader.js';</script>
       <script type="text/javascript">
-var kDefaultURL = '<?php print $variables?>';
+
+'use strict';
+
+var kDefaultURL = '<?php print $file?>';
 var kDefaultScale = 'auto';
 var kDefaultScaleDelta = 1.1;
 var kUnknownScale = 0;
@@ -580,6 +582,10 @@ var PDFView = {
         outlineSwitchButton.setAttribute('data-selected', true);
         break;
     }
+  },
+
+  pinSidebar: function pdfViewPinSidebar() {
+    document.getElementById('sidebar').classList.toggle('pinned');
   },
 
   getVisiblePages: function pdfViewGetVisiblePages() {
@@ -1428,9 +1434,9 @@ window.addEventListener('keydown', function keydown(evt) {
 
       <div class="separator"></div>
 
-      <input id="fileInput" type="file" oncontextmenu="return false;"/>
+      <!--input id="fileInput" type="file" oncontextmenu="return false;"/>
 
-      <div id="fileInputSeperator" class="separator"></div>
+      <div id="fileInputSeperator" class="separator"></div-->
 
       <a href="#" id="viewBookmark" title="Bookmark (or copy) current location">
         <img src="<?php print $GLOBALS['base_url']?>/sites/all/libraries/pdf.js/web/images/bookmark.svg" alt="Bookmark" align="top" height="16"/>
@@ -1459,6 +1465,7 @@ window.addEventListener('keydown', function keydown(evt) {
 
     <div id="sidebar">
       <div id="sidebarBox">
+        <div id="pinIcon" onClick="PDFView.pinSidebar()"></div>
         <div id="sidebarScrollView">
           <div id="sidebarView"></div>
         </div>
@@ -1473,10 +1480,10 @@ window.addEventListener('keydown', function keydown(evt) {
             <img src="<?php print $GLOBALS['base_url']?>/sites/all/libraries/pdf.js/web/images/nav-outline.svg" align="top" height="16" alt="Document Outline" />
           </button>
         </div>
-     </div>
+      </div>
     </div>
 
     <div id="loading">Loading... 0%</div>
     <div id="viewer"></div>
   </body>
-</html>
+</html>    
