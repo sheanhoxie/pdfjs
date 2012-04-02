@@ -22,7 +22,7 @@ function pdf_theme() {
   $theme = array(
     'pdf_formatter_default' => array(
       'variables' => array('file' => NULL),
-//      'file' => 'includes/media_pdf.theme.inc',
+//      'file' => 'ncludes/media_pdf.theme.inc',
     ),
     'pdf_formatter_thumbnail' => array(
       'variables' => array('file' => NULL),
@@ -49,6 +49,7 @@ function pdf_worker_loader_js() {
 function pdf_js_viewer($fid) {
   $file = file_load($fid);
   $file_url = file_create_url($file->uri);
+
   print theme('pdf_viewer', array('file' => $file_url));
   exit();
 }
