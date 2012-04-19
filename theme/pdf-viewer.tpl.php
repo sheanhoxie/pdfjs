@@ -78,9 +78,9 @@
 
       <div class="separator"></div>
 
-      <!--input id="fileInput" type="file" oncontextmenu="return false;"/>
+      <input id="fileInput" type="file" oncontextmenu="return false;"/>
 
-      <div id="fileInputSeperator" class="separator"></div-->
+      <div id="fileInputSeperator" class="separator"></div>
 
       <a href="#" id="viewBookmark" title="Bookmark (or copy) current location">
         <img src="<?php print $GLOBALS['base_url']?>/sites/all/libraries/pdf.js/web/images/bookmark.svg" alt="Bookmark" align="top" height="16"/>
