@@ -51,26 +51,42 @@ function theme_pdf_formatter_default($variables) {
 }
 
 function theme_pdf_formatter_thumbnail($variables) {
+  $file = $variables['file'];
+  $file_url = file_create_url($file['uri']);
   global $base_url;
   drupal_add_js('sites/all/libraries/pdf.js/build/pdf.js');
-  $file = file_create_url($variables['file']['uri']);
 
   $worker_loader = url('pdf/worker_loader.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
 
   $js .= "'use strict';
-    PDFJS.getPdf('$file', function getPdfHelloWorld(data) {
-    var pdf = new PDFJS.PDFDoc(data);
-    var page = pdf.getPage(1);
-    var scale = 1.5;
-    var canvas = document.getElementById('pdf');
-    var context = canvas.getContext('2d');
-    canvas.height = page.height * scale;
-    canvas.width = page.width * scale;
-    page.startRendering(context);});";
+  PDFJS.getDocument('$file_url').then(function(pdf) {
+    pdf.getPage(1).then(function(page) {
+      var scale = 1;
+      var viewport = page.getViewport(scale);
+
+      //
+      // Prepare canvas using PDF page dimensions
+      //
+      var canvas = document.getElementById('the-canvas');
+      var context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      //
+      // Render PDF page into canvas context
+      //
+      var renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+      page.render(renderContext);
+    });
+  });
+  ";
 
   drupal_add_js($js, array('type' => 'inline'));
-  $output = '<canvas id="pdf" style="border:1px solid black;"/>';
+  $output = '<canvas id="the-canvas" style="border:1px solid black;"/>';
   return $output;
 }
 

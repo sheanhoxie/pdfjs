@@ -22,11 +22,11 @@ function pdf_theme() {
   $theme = array(
     'pdf_formatter_default' => array(
       'variables' => array('file' => NULL),
-//      'file' => 'ncludes/media_pdf.theme.inc',
+      'file' => 'includes/pdf.field.inc',
     ),
     'pdf_formatter_thumbnail' => array(
       'variables' => array('file' => NULL),
-//      'file' => 'includes/media_pdf.theme.inc',
+      'file' => 'includes/pdf.field.inc',
     ),
   );
   $theme['pdf_viewer'] = array(
@@ -53,3 +53,4 @@ function pdf_js_viewer($fid) {
   print theme('pdf_viewer', array('file' => $file_url));
   exit();
 }
+
