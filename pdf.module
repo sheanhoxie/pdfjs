@@ -11,8 +11,6 @@ function pdf_menu() {
 }
 
 function pdf_theme() {
-  $path = drupal_get_path('module', 'pdf') . '/theme';
-
   $theme = array(
     'pdf_formatter_default' => array(
       'variables' => array('file' => NULL),
@@ -31,14 +29,6 @@ function pdf_worker_loader_js() {
 //  $output = "'use strict';";
   $output = "importScripts('$base_url/sites/all/libraries/pdf.js/build/pdf.js');";
   print $output;
-  exit();
-}
-
-function pdf_js_viewer($fid) {
-  $file = file_load($fid);
-  $file_url = file_create_url($file->uri);
-
-  print theme('pdf_viewer', array('file' => $file_url));
   exit();
 }
 
