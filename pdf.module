@@ -6,6 +6,7 @@ function pdf_menu() {
   $items['pdf/worker_loader.js'] = array(
     'page callback' => 'pdf_worker_loader_js',
     'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }
