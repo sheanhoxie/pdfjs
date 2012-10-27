@@ -50,9 +50,11 @@ function theme_pdf_formatter_default($variables) {
     $file = file_load(arg(1));
     $file_url = file_create_url($file->uri);
   }
+  drupal_add_js(drupal_get_path('module', 'pdf') . '/acrobat_detection.js');
+
   $content = '<iframe class="pdf" frameborder="no" width="99%" height="600px" src="';
   $content .= $GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/web/viewer.html?file=' . $file_url;
-  $content .= '"></iframe>';
+  $content .= '">' . $file_url . '</iframe>';
   return $content;
 }
 
