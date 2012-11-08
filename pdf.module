@@ -14,7 +14,10 @@ function pdf_menu() {
 function pdf_theme() {
   $theme = array(
     'pdf_formatter_default' => array(
-      'variables' => array('file' => NULL),
+      'variables' => array(
+        'file' => NULL, 
+        'keep_pdfjs' => NULL,
+      ),
       'file' => 'includes/pdf.field.inc',
     ),
     'pdf_formatter_thumbnail' => array(
