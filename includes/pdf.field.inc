@@ -78,7 +78,7 @@ function theme_pdf_formatter_default($variables) {
 
 function theme_pdf_formatter_thumbnail($variables) {
   if (isset($variables['file'])) {
-    $file_url = file_create_url($variables['file']['uri']);
+    $file_url = file_create_url($variables['file']->uri);
   }
   //TODO http://drupal.org/node/1540668
   elseif (arg(0) == 'file' && is_numeric(arg(1))) {
@@ -87,7 +87,7 @@ function theme_pdf_formatter_thumbnail($variables) {
   }
   drupal_add_js($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.js');
 
-  $worker_loader = url('pdf/worker_loader.js');
+  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/src/worker_loader.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   $js .= "'use strict';
   PDFJS.getDocument('$file_url').then(function(pdf) {
