@@ -58,13 +58,11 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
 }
 
 function theme_pdf_formatter_default($variables) {
-  if (isset($variables['file'])) {
-    $file_url = file_create_url($variables['file']->uri);
+  if (is_array($variables['file'])) {
+    $file_url = file_create_url($variables['file']['uri']);
   }
-  //TODO http://drupal.org/node/1540668
-  elseif (arg(0) == 'file' && is_numeric(arg(1))) {
-    $file = file_load(arg(1));
-    $file_url = file_create_url($file->uri);
+  if (is_object($variables['file'])) {
+    $file_url = file_create_url($variables['file']->uri);
   }
   if ($variables['keep_pdfjs'] != true) {
     drupal_add_js(drupal_get_path('module', 'pdf') . '/acrobat_detection.js');
