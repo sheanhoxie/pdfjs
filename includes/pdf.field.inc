@@ -29,6 +29,19 @@ function pdf_field_formatter_settings_form($field, $instance, $view_mode, $form,
   }
   return $element;
 }
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function pdf_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  if ($display['type'] == 'pdf_default') {
+    return t('Use pdf.js even users have PDF reader plugin: @keep_pdfjs', array('@keep_pdfjs' => $settings['keep_pdfjs'] ? t('Yes') : t('No')));
+  }
+  return '';
+}
+
 /**
  * Implements hook_field_formatter_view().
  */
