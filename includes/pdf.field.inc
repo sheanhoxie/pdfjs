@@ -40,7 +40,7 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
       foreach ($items as $delta => $item) {
         $element[$delta] = array(
           '#theme' => 'pdf_formatter_default',
-          '#file' => $item,
+          '#file' => (object)$item,
           '#keep_pdfjs' => $settings['keep_pdfjs'],
         );
       }
@@ -49,7 +49,7 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
       foreach ($items as $delta => $item) {
         $element[$delta] = array(
           '#theme' => 'pdf_formatter_thumbnail',
-          '#file' => $item,
+          '#file' => (object)$item,
         );
       }
       break;
@@ -58,12 +58,7 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
 }
 
 function theme_pdf_formatter_default($variables) {
-  if (is_array($variables['file'])) {
-    $file_url = file_create_url($variables['file']['uri']);
-  }
-  if (is_object($variables['file'])) {
-    $file_url = file_create_url($variables['file']->uri);
-  }
+  $file_url = file_create_url($variables['file']->uri);
   if ($variables['keep_pdfjs'] != true) {
     drupal_add_js(drupal_get_path('module', 'pdf') . '/acrobat_detection.js');
   }
@@ -75,14 +70,7 @@ function theme_pdf_formatter_default($variables) {
 }
 
 function theme_pdf_formatter_thumbnail($variables) {
-  if (isset($variables['file'])) {
-    $file_url = file_create_url($variables['file']->uri);
-  }
-  //TODO http://drupal.org/node/1540668
-  elseif (arg(0) == 'file' && is_numeric(arg(1))) {
-    $file = file_load(arg(1));
-    $file_url = file_create_url($file->uri);
-  }
+  $file_url = file_create_url($variables['file']->uri);
   drupal_add_js($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.js');
 
   $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/src/worker_loader.js');
