@@ -6,12 +6,12 @@ function pdf_field_formatter_info() {
   return array(
     'pdf_default' => array(
       'label' => t('PDF default'),
-      'field types' => array('file', 'pdf'),
+      'field types' => array('file'),
       'settings'=>array('keep_pdfjs' => TRUE),
     ),
     'pdf_thumbnail' => array(
       'label' => t('PDF first page'),
-      'field types' => array('file', 'pdf'),
+      'field types' => array('file'),
     ),
   );
 }
