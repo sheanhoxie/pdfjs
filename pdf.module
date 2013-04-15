@@ -14,6 +14,10 @@ function pdf_theme() {
       'variables' => array('file' => NULL),
       'file' => 'includes/pdf.field.inc',
     ),
+    'pdf_formatter_pages' => array(
+      'variables' => array('file' => NULL),
+      'file' => 'includes/pdf.field.inc',
+    ),
   );
   return $theme;
 }
