@@ -100,7 +100,7 @@ function theme_pdf_formatter_thumbnail($variables) {
   $file_url = file_create_url($variables['file']->uri);
   drupal_add_js(libraries_get_path('pdf.js') . '/build/pdf.js');
 
-  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/src/worker_loader.js');
+  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   $js .= "'use strict';
   PDFJS.getDocument('$file_url').then(function(pdf) {
@@ -132,7 +132,7 @@ function theme_pdf_formatter_pages($variables) {
   drupal_add_css(drupal_get_path('module', 'pdf') . '/css/pdf.css');
   drupal_add_js(libraries_get_path('pdf.js') . '/build/pdf.js');
 
-  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/src/worker_loader.js');
+  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   drupal_add_js($js, array('type' => 'inline'));
   //drupal_add_js(libraries_get_path('pdf.js') . '/web/viewer.js');
