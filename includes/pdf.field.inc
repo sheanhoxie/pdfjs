@@ -16,6 +16,7 @@ function pdf_field_formatter_info() {
     'pdf_pages' => array(
       'label' => t('PDF: Continuous scroll'),
       'field types' => array('file'),
+      'settings'=>array('scale' => 1),
     ),
   );
 }
@@ -28,7 +29,15 @@ function pdf_field_formatter_settings_form($field, $instance, $view_mode, $form,
       '#type' => 'checkbox',
       '#title' => t('Use pdf.js even users have PDF reader plugin'),
       '#default_value' => $settings['keep_pdfjs'],
-      '#description' => t('It will keep the UE consistent. If it\'s unchecked, pdf.js will be loaded only when users don\'t have PDF reader (except Safari with default OSX Preview which can\'t be detected with JS).'),
+      '#description' => t('Set the scale'),
+    );
+  }
+  if ($display['type'] == 'pdf_pages') {
+    $element['scale'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Set the scale of PDF pages'),
+      '#default_value' => $settings['scale'],
+      //'#description' => t(''),
     );
   }
   return $element;
@@ -42,6 +51,9 @@ function pdf_field_formatter_settings_summary($field, $instance, $view_mode) {
   $settings = $display['settings'];
   if ($display['type'] == 'pdf_default') {
     return t('Use pdf.js even users have PDF reader plugin: @keep_pdfjs', array('@keep_pdfjs' => $settings['keep_pdfjs'] ? t('Yes') : t('No')));
+  }
+  if ($display['type'] == 'pdf_pages') {
+    return t('Scale: @scale', array('@scale' => $settings['scale']));
   }
   return '';
 }
@@ -75,6 +87,7 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
         $element[$delta] = array(
           '#theme' => 'pdf_formatter_pages',
           '#file' => (object)$item,
+          '#scale' => $settings['scale'],
         );
       }
       break;
@@ -126,20 +139,22 @@ function theme_pdf_formatter_thumbnail($variables) {
 }
 
 function theme_pdf_formatter_pages($variables) {
+  $scale = $variables['scale'];
   $file_url = file_create_url($variables['file']->uri);
   $filename = $variables['file']->filename;
   $fid = $variables['file']->fid;
+  drupal_add_css(drupal_get_path('module', 'pdf') . '/css/TextLayer.css');
   drupal_add_css(drupal_get_path('module', 'pdf') . '/css/pdf.css');
   drupal_add_js(libraries_get_path('pdf.js') . '/build/pdf.js');
 
   $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   drupal_add_js($js, array('type' => 'inline'));
-  //drupal_add_js(libraries_get_path('pdf.js') . '/web/viewer.js');
+  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/TextLayerBuilder.js');
+  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/PdfListView.js');
   drupal_add_js(drupal_get_path('module', 'pdf') . '/js/pdf.js');
-  //$content = '<div id="outerContainer"><div id="mainContainer"><div id="viewerContainer" tabindex="1"><div id="viewer" contextmenu="viewerContextMenu"></div></div></div></div>';
 
-  $content = format_string('<div class="pdf" id="viewer fid-@fid" file="@file">!link</div>', array('@fid' => $fid, '@file' => $file_url, '!link' => t('Download: ') . theme('file_entity_file_link' , $variables)));
+  $content = format_string('<div class="pdf" id="viewer fid-@fid" file="@file" scale="@scale">!link</div>', array('@fid' => $fid, '@file' => $file_url, '@scale' => $scale, '!link' => t('Download: ') . theme('file_entity_file_link' , $variables)));
   return $content;
 }
 
