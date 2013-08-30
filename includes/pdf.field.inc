@@ -113,7 +113,7 @@ function theme_pdf_formatter_thumbnail($variables) {
   $file_url = file_create_url($variables['file']->uri);
   drupal_add_js(libraries_get_path('pdf.js') . '/build/pdf.js');
 
-  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.js');
+  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   $js .= "'use strict';
   PDFJS.getDocument('$file_url').then(function(pdf) {
@@ -147,14 +147,21 @@ function theme_pdf_formatter_pages($variables) {
   drupal_add_css(drupal_get_path('module', 'pdf') . '/css/pdf.css');
   drupal_add_js(libraries_get_path('pdf.js') . '/build/pdf.js');
 
-  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.js');
+  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   drupal_add_js($js, array('type' => 'inline'));
   drupal_add_js(drupal_get_path('module', 'pdf') . '/js/TextLayerBuilder.js');
   drupal_add_js(drupal_get_path('module', 'pdf') . '/js/PdfListView.js');
   drupal_add_js(drupal_get_path('module', 'pdf') . '/js/pdf.js');
-
-  $content = format_string('<div class="pdf" id="viewer fid-@fid" file="@file" scale="@scale">!link</div>', array('@fid' => $fid, '@file' => $file_url, '@scale' => $scale, '!link' => t('Download: ') . theme('file_entity_file_link' , $variables)));
+  $link = array(
+    'text' => $filename,
+    'path' => $file_url,
+    'options' => array(
+      'attributes' => array(),
+      'html' => FALSE,
+     ),
+  );
+  $content = format_string('<div class="pdf" id="viewer fid-@fid" file="@file" scale="@scale">!link</div>', array('@fid' => $fid, '@file' => $file_url, '@scale' => $scale, '!link' => t('Download: ') . theme_link($link)));
   return $content;
 }
 
