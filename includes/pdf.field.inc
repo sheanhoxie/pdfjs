@@ -27,9 +27,9 @@ function pdf_field_formatter_settings_form($field, $instance, $view_mode, $form,
   if ($display['type'] == 'pdf_default') {
     $element['keep_pdfjs'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use pdf.js even users have PDF reader plugin'),
+      '#title' => t('Always use pdf.js, if the browser support.'),
       '#default_value' => $settings['keep_pdfjs'],
-      '#description' => t('Set the scale'),
+      '#description' => t('Pdf.js will always be used even if the users have PDF reader plugin'),
     );
   }
   if ($display['type'] == 'pdf_pages') {
