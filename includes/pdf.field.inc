@@ -27,9 +27,9 @@ function pdf_field_formatter_settings_form($field, $instance, $view_mode, $form,
   if ($display['type'] == 'pdf_default') {
     $element['keep_pdfjs'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Always use pdf.js, if the browser support.'),
+      '#title' => t('Always use pdf.js'),
       '#default_value' => $settings['keep_pdfjs'],
-      '#description' => t('Pdf.js will always be used even if the users have PDF reader plugin'),
+      '#description' => t('Pdf.js will always be used even if the browser has PDF plugin. Uncheck it if you just want to use pdf.js when the browser doesn\'t have PDF plugin.'),
     );
   }
   if ($display['type'] == 'pdf_pages') {
@@ -105,7 +105,6 @@ function theme_pdf_formatter_default($variables) {
   
   $force_pdfjs = $variables['keep_pdfjs'];
   
-  // Build the iframe tag--D7 style!
   $content = array(
     '#type' => 'html_tag',
     '#tag' => 'iframe',
