@@ -96,17 +96,39 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
 }
 
 function theme_pdf_formatter_default($variables) {
+  global $base_path;
+  
   $file_url = file_create_url($variables['file']->uri);
-  drupal_add_css(drupal_get_path('module', 'pdf') . '/css/pdf.css');
-
-  if ($variables['keep_pdfjs'] != true) {
-    drupal_add_js(drupal_get_path('module', 'pdf') . '/js/acrobat_detection.js');
+  $module_path = drupal_get_path('module', 'pdf');  
+  $library_path = libraries_get_path('pdf.js');
+  $iframe_src = $base_path . $library_path . '/web/viewer.html?file=' . $file_url;
+  
+  $force_pdfjs = $variables['keep_pdfjs'];
+  
+  // Build the iframe tag--D7 style!
+  $content = array(
+    '#type' => 'html_tag',
+    '#tag' => 'iframe',
+    '#value' => $file_url,
+    '#attributes' => array(
+      'class' => array('pdf'),
+      'webkitallowfullscreen' => '',
+      'mozallowfullscreen' => '',
+      'allowfullscreen' => '',
+      'frameborder' => 'no',
+      'height' => '600px',
+      'src' => $force_pdfjs ? $iframe_src : $file_url,
+      //'data-src' => $iframe_src,
+    ),
+  );
+  
+  if ($force_pdfjs != TRUE) {
+    drupal_add_js($module_path . '/js/acrobat_detection.js');
   }
 
-  $content = '<iframe class="pdf" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="no" height="600px" src="';
-  $content .= $GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/web/viewer.html?file=' . $file_url;
-  $content .= '">' . $file_url . '</iframe>';
-  return $content;
+  drupal_add_css($module_path . '/css/pdf.css');
+
+  return render($content);
 }
 
 function theme_pdf_formatter_thumbnail($variables) {
