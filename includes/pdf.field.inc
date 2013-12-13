@@ -67,28 +67,34 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
   switch ($display['type']) {
     case 'pdf_default':
       foreach ($items as $delta => $item) {
-        $element[$delta] = array(
-          '#theme' => 'pdf_formatter_default',
-          '#file' => (object)$item,
-          '#keep_pdfjs' => $settings['keep_pdfjs'],
-        );
+        if ( strpos($item['filemime'], 'pdf' ) ) {
+          $element[$delta] = array(
+            '#theme' => 'pdf_formatter_default',
+            '#file' => (object)$item,
+            '#keep_pdfjs' => $settings['keep_pdfjs'],
+          );
+        }
       }
       break;
     case 'pdf_thumbnail':
       foreach ($items as $delta => $item) {
-        $element[$delta] = array(
-          '#theme' => 'pdf_formatter_thumbnail',
-          '#file' => (object)$item,
-        );
+        if ( strpos($item['filemime'], 'pdf' ) ) {
+          $element[$delta] = array(
+            '#theme' => 'pdf_formatter_thumbnail',
+            '#file' => (object)$item,
+          );
+        }
       }
       break;
     case 'pdf_pages':
       foreach ($items as $delta => $item) {
-        $element[$delta] = array(
-          '#theme' => 'pdf_formatter_pages',
-          '#file' => (object)$item,
-          '#scale' => $settings['scale'],
-        );
+        if ( strpos($item['filemime'], 'pdf' ) ) {
+          $element[$delta] = array(
+            '#theme' => 'pdf_formatter_pages',
+            '#file' => (object)$item,
+            '#scale' => $settings['scale'],
+          );
+        }
       }
       break;
   }
@@ -97,14 +103,11 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
 
 function theme_pdf_formatter_default($variables) {
   global $base_path;
-  
   $file_url = file_create_url($variables['file']->uri);
-  $module_path = drupal_get_path('module', 'pdf');  
+  $module_path = drupal_get_path('module', 'pdf');
   $library_path = libraries_get_path('pdf.js');
   $iframe_src = $base_path . $library_path . '/web/viewer.html?file=' . $file_url;
-  
   $force_pdfjs = $variables['keep_pdfjs'];
-  
   $content = array(
     '#type' => 'html_tag',
     '#tag' => 'iframe',
@@ -120,7 +123,6 @@ function theme_pdf_formatter_default($variables) {
       //'data-src' => $iframe_src,
     ),
   );
-  
   if ($force_pdfjs != TRUE) {
     drupal_add_js($module_path . '/js/acrobat_detection.js');
   }
