@@ -7,7 +7,7 @@
           this,
           {
             textLayerBuilder: TextLayerBuilder,
-            //logLevel: PDFListView.Logger.DEBUG
+            logLevel: PDFListView.Logger.DEBUG
           }
         );
         pdfListView.loadPdf(file);
