@@ -168,13 +168,18 @@ function theme_pdf_formatter_pages($variables) {
   $fid = $variables['file']->fid;
   drupal_add_css(drupal_get_path('module', 'pdf') . '/css/TextLayer.css');
   drupal_add_css(drupal_get_path('module', 'pdf') . '/css/pdf.css');
-  drupal_add_js(libraries_get_path('pdf.js') . '/build/pdf.js');
+  drupal_add_js(libraries_get_path('pdf.js') . '/build/generic/build/pdf.js');
+  drupal_add_js(libraries_get_path('pdf.js') . '/web/pdf_find_bar.js');
+  drupal_add_js(libraries_get_path('pdf.js') . '/web/pdf_find_controller.js');
+  drupal_add_js(libraries_get_path('pdf.js') . '/web/ui_utils.js');
+  drupal_add_js(libraries_get_path('pdf.js') . '/web/text_layer_builder.js');
 
   $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   drupal_add_js($js, array('type' => 'inline'));
-  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/TextLayerBuilder.js');
-  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/PdfListView.js');
+//  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/TextLayerBuilder.js');
+//  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/AnnotationsLayerBuilder.js');
+//  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/PdfListView.js');
   drupal_add_js(drupal_get_path('module', 'pdf') . '/js/pdf.js');
   $link = array(
     'text' => $filename,
