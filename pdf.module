@@ -5,7 +5,7 @@ function pdf_theme() {
   $theme = array(
     'pdf_formatter_default' => array(
       'variables' => array(
-        'file' => NULL, 
+        'file' => NULL,
         'keep_pdfjs' => NULL,
       ),
       'file' => 'includes/pdf.field.inc',

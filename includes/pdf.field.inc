@@ -29,7 +29,7 @@ function pdf_field_formatter_settings_form($field, $instance, $view_mode, $form,
       '#type' => 'checkbox',
       '#title' => t('Always use pdf.js'),
       '#default_value' => $settings['keep_pdfjs'],
-      '#description' => t('Pdf.js will always be used even if the browser has PDF plugin. Uncheck it if you just want to use pdf.js when the browser doesn\'t have PDF plugin.'),
+      '#description' => t("Use pdf.js even the browser has Adobe Reader Plugin, WebKit PDF Reader for Safari or the PDF Reader for Chrome (Chrome's default alternative to the Adobe Reader Plugin) installed."),
     );
   }
   if ($display['type'] == 'pdf_pages') {
