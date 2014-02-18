@@ -119,12 +119,13 @@ function theme_pdf_formatter_default($variables) {
       'allowfullscreen' => '',
       'frameborder' => 'no',
       'height' => '600px',
-      'src' => $force_pdfjs ? $iframe_src : $file_url,
-      //'data-src' => $iframe_src,
+      'src' => $iframe_src,
+      'data-src' => $file_url,
     ),
   );
   if ($force_pdfjs != TRUE) {
     drupal_add_js($module_path . '/js/acrobat_detection.js');
+    drupal_add_js($module_path . '/js/default.js');
   }
 
   drupal_add_css($module_path . '/css/pdf.css');

@@ -1,100 +1,77 @@
-(function ($) {
-  var perform_acrobat_detection = function() { 
-    //
-    // The returned object
-    // 
-    var browser_info = {
-      name: null,
-      acrobat : null,
-      acrobat_ver : null
-    };
-    
-    if(navigator && (navigator.userAgent.toLowerCase()).indexOf("chrome") > -1) browser_info.name = "chrome";
-    else if(navigator && (navigator.userAgent.toLowerCase()).indexOf("msie") > -1) browser_info.name = "ie";
-    else if(navigator && (navigator.userAgent.toLowerCase()).indexOf("firefox") > -1) browser_info.name = "firefox";
-    else if(navigator && (navigator.userAgent.toLowerCase()).indexOf("msie") > -1) browser_info.name = "other";
-    
-    
-   try
-   {
-    if(browser_info.name == "ie")
-    {          
-     var control = null;
-     
-     //
-     // load the activeX control
-     //                
-     try
-     {
-      // AcroPDF.PDF is used by version 7 and later
-      control = new ActiveXObject('AcroPDF.PDF');
-     }
-     catch (e){}
-     
-     if (!control)
-     {
-      try
-      {
-       // PDF.PdfCtrl is used by version 6 and earlier
-       control = new ActiveXObject('PDF.PdfCtrl');
-      }
-      catch (e) {}
-     }
-     
-     if(!control)
-     {     
-      browser_info.acrobat == null;
-      return browser_info;  
-     }
-     
-     version = control.GetVersions().split(',');
-     version = version[0].split('=');
-     browser_info.acrobat = "installed";
-     browser_info.acrobat_ver = parseFloat(version[1]);                
-    }
-    else if(browser_info.name == "chrome")
-    {
-     for(key in navigator.plugins)
-     {
-      if(navigator.plugins[key].name == "Chrome PDF Viewer" || navigator.plugins[key].name == "Adobe Acrobat")
-      {
-       browser_info.acrobat = "installed";
-       browser_info.acrobat_ver = parseInt(navigator.plugins[key].version) || "Chome PDF Viewer";
-      }
-     } 
-    }
-    //
-    // NS3+, Opera3+, IE5+ Mac, Safari (support plugin array):  check for Acrobat plugin in plugin array
-    //    
-    else if(navigator.plugins != null)
-    {      
-     var acrobat = navigator.plugins['Adobe Acrobat'];
-     if(acrobat == null)
-     {           
-      browser_info.acrobat = null;
-      return browser_info;
-     }
-     browser_info.acrobat = "installed";
-     browser_info.acrobat_ver = parseInt(acrobat.version[0]);                   
-    }
-    
-    
-   }
-   catch(e)
-   {
-    browser_info.acrobat_ver = null;
-   }
-     
-    return browser_info;
-  }
+//
+// http://thecodeabode.blogspot.com
+// @author: Ben Kitzelman
+// @license:  FreeBSD: (http://opensource.org/licenses/BSD-2-Clause) Do whatever you like with it
+// @updated: 03-03-2013
+//
+var getAcrobatInfo = function() {
 
-  Drupal.behaviors.pdf = {
-    'attach': function(context, settings) {
-      var browser_info = perform_acrobat_detection();
-      console.log(browser_info);
-      if (browser_info.acrobat !== null) {
-        $("iframe.pdf").attr('src', $("iframe.pdf").text());
-      }
+  var getBrowserName = function() {
+    return this.name = this.name || function() {
+      var userAgent = navigator ? navigator.userAgent.toLowerCase() : "other";
+
+      if(userAgent.indexOf("chrome") > -1)        return "chrome";
+      else if(userAgent.indexOf("safari") > -1)   return "safari";
+      else if(userAgent.indexOf("msie") > -1)     return "ie";
+      else if(userAgent.indexOf("firefox") > -1)  return "firefox";
+      return userAgent;
+    }();
+  };
+
+  var getActiveXObject = function(name) {
+    try { return new ActiveXObject(name); } catch(e) {}
+  };
+
+  var getNavigatorPlugin = function(name) {
+    for(key in navigator.plugins) {
+      var plugin = navigator.plugins[key];
+      if(plugin.name == name) return plugin;
     }
   };
-})(jQuery);
+
+  var getPDFPlugin = function() {
+    return this.plugin = this.plugin || function() {
+      if(getBrowserName() == 'ie') {
+        //
+        // load the activeX control
+        // AcroPDF.PDF is used by version 7 and later
+        // PDF.PdfCtrl is used by version 6 and earlier
+        return getActiveXObject('AcroPDF.PDF') || getActiveXObject('PDF.PdfCtrl');
+      }
+      else {
+        return getNavigatorPlugin('Adobe Acrobat') || getNavigatorPlugin('Chrome PDF Viewer') || getNavigatorPlugin('WebKit built-in PDF');
+      }
+    }();
+  };
+
+  var isAcrobatInstalled = function() {
+    return !!getPDFPlugin();
+  };
+
+  var getAcrobatVersion = function() {
+    try {
+      var plugin = getPDFPlugin();
+
+      if(getBrowserName() == 'ie') {
+        var versions = plugin.GetVersions().split(',');
+        var latest   = versions[0].split('=');
+        return parseFloat(latest[1]);
+      }
+
+      if(plugin.version) return parseInt(plugin.version);
+      return plugin.name
+    }
+    catch(e) {
+      return null;
+    }
+  }
+
+  //
+  // The returned object
+  //
+  return {
+    browser:        getBrowserName(),
+    acrobat:        isAcrobatInstalled() ? 'installed' : false,
+    acrobatVersion: getAcrobatVersion()
+  };
+};
