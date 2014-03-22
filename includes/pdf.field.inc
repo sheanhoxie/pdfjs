@@ -102,11 +102,10 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
 }
 
 function theme_pdf_formatter_default($variables) {
-  global $base_path;
   $file_url = file_create_url($variables['file']->uri);
   $module_path = drupal_get_path('module', 'pdf');
   $library_path = libraries_get_path('pdf.js');
-  $iframe_src = $base_path . $library_path . '/web/viewer.html?file=' . $file_url;
+  $iframe_src = file_create_url($library_path . '/web/viewer.html') . '?file=' . rawurlencode($file_url);
   $force_pdfjs = $variables['keep_pdfjs'];
   $content = array(
     '#type' => 'html_tag',
@@ -137,7 +136,7 @@ function theme_pdf_formatter_thumbnail($variables) {
   $file_url = file_create_url($variables['file']->uri);
   drupal_add_js(libraries_get_path('pdf.js') . '/build/pdf.js');
 
-  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.worker.js');
+  $worker_loader = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   $js .= "'use strict';
   PDFJS.getDocument('$file_url').then(function(pdf) {
@@ -175,7 +174,7 @@ function theme_pdf_formatter_pages($variables) {
   drupal_add_js(libraries_get_path('pdf.js') . '/web/ui_utils.js');
   drupal_add_js(libraries_get_path('pdf.js') . '/web/text_layer_builder.js');
 
-  $worker_loader = url($GLOBALS['base_url'] . '/' . libraries_get_path('pdf.js') . '/build/pdf.worker.js');
+  $worker_loader = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   drupal_add_js($js, array('type' => 'inline'));
 //  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/TextLayerBuilder.js');
@@ -193,4 +192,3 @@ function theme_pdf_formatter_pages($variables) {
   $content = format_string('<div class="pdf" id="viewer fid-@fid" file="@file" scale="@scale">!link</div>', array('@fid' => $fid, '@file' => $file_url, '@scale' => $scale, '!link' => t('Download: ') . theme_link($link)));
   return $content;
 }
-
