@@ -7,6 +7,8 @@ function pdf_theme() {
       'variables' => array(
         'file' => NULL,
         'keep_pdfjs' => NULL,
+        'width' => NULL,
+        'height' => Null,
       ),
       'file' => 'includes/pdf.field.inc',
     ),

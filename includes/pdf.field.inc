@@ -7,7 +7,11 @@ function pdf_field_formatter_info() {
     'pdf_default' => array(
       'label' => t('PDF: Default viewer of PDF.js'),
       'field types' => array('file'),
-      'settings'=>array('keep_pdfjs' => TRUE),
+      'settings'=>array(
+        'keep_pdfjs' => TRUE,
+        'width' => 'auto',
+        'height' => '600px',
+      ),
     ),
     'pdf_thumbnail' => array(
       'label' => t('PDF: Display the first page'),
@@ -31,6 +35,21 @@ function pdf_field_formatter_settings_form($field, $instance, $view_mode, $form,
       '#default_value' => $settings['keep_pdfjs'],
       '#description' => t("Use pdf.js even the browser has Adobe Reader Plugin, WebKit PDF Reader for Safari or the PDF Reader for Chrome (Chrome's default alternative to the Adobe Reader Plugin) installed."),
     );
+
+    $element['width'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Width',
+      '#default_value' => $settings['width'],
+      '#description' => t('Width of the viewer. Ex: 250px or 100%'),
+    );
+
+    $element['height'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Height',
+      '#default_value' => $settings['height'],
+      '#description' => t('Height of the viewer. Ex: 250px or 100%'),
+    );
+
   }
   if ($display['type'] == 'pdf_pages') {
     $element['scale'] = array(
@@ -50,7 +69,7 @@ function pdf_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
   if ($display['type'] == 'pdf_default') {
-    return t('Use pdf.js even users have PDF reader plugin: @keep_pdfjs', array('@keep_pdfjs' => $settings['keep_pdfjs'] ? t('Yes') : t('No')));
+    return t('Use pdf.js even users have PDF reader plugin: @keep_pdfjs', array('@keep_pdfjs' => $settings['keep_pdfjs'] ? t('Yes') : t('No'))) . '<br>' . t('Widht: @width , Height: @height', array('@width' => $settings['width'] , '@height' => $settings['height']) );
   }
   if ($display['type'] == 'pdf_pages') {
     return t('Scale: @scale', array('@scale' => $settings['scale']));
@@ -72,6 +91,8 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
             '#theme' => 'pdf_formatter_default',
             '#file' => (object)$item,
             '#keep_pdfjs' => $settings['keep_pdfjs'],
+            '#width'  => $settings['width'],
+            '#height'  => $settings['height'],
           );
         }
       }
@@ -117,7 +138,8 @@ function theme_pdf_formatter_default($variables) {
       'mozallowfullscreen' => '',
       'allowfullscreen' => '',
       'frameborder' => 'no',
-      'height' => '600px',
+      'width' => $variables['width'],
+      'height' => $variables['height'],
       'src' => $iframe_src,
       'data-src' => $file_url,
     ),
