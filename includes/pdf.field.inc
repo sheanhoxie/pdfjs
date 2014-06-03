@@ -9,7 +9,7 @@ function pdf_field_formatter_info() {
       'field types' => array('file'),
       'settings'=>array(
         'keep_pdfjs' => TRUE,
-        'width' => 'auto',
+        'width' => '100px',
         'height' => '600px',
       ),
     ),
@@ -149,7 +149,7 @@ function theme_pdf_formatter_default($variables) {
     drupal_add_js($module_path . '/js/default.js');
   }
 
-  drupal_add_css($module_path . '/css/pdf.css');
+  //drupal_add_css($module_path . '/css/pdf.css');
 
   return render($content);
 }
