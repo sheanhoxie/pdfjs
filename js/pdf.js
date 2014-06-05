@@ -16,68 +16,62 @@
               pdf.getPage(i).then(renderPage);
             }
         }
-
         function renderPage(page) {
-            var viewport = page.getViewport(scale);
-            var $canvas = jQuery("<canvas></canvas>");
+          var viewport = page.getViewport(scale);
+          var $canvas = jQuery("<canvas></canvas>");
 
-            //Set the canvas height and width to the height and width of the viewport
-            var canvas = $canvas.get(0);
-            var context = canvas.getContext("2d");
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
+          // Set the canvas height and width to the height and width of the viewport
+          var canvas = $canvas.get(0);
+          var context = canvas.getContext("2d");
 
-            //Append the canvas to the pdf container div
-            var $pdfContainer = $('#pdfContainer');
-            //$pdfContainer.append($canvas);
+          // The following few lines of code set up scaling on the context if we are on a HiDPI display
+          var outputScale = getOutputScale(context);
+          canvas.width = (Math.floor(viewport.width) * outputScale.sx) | 0;
+          canvas.height = (Math.floor(viewport.height) * outputScale.sy) | 0;
+          canvas.style.width = Math.floor(viewport.width) + 'px';
+          canvas.style.height = Math.floor(viewport.height) + 'px';
 
-            var canvasOffset = $canvas.offset();
-            var $textLayerDiv = jQuery("<div />")
-                .addClass("textLayer")
-                .css("height", viewport.height + "px")
-                .css("width", viewport.width + "px");
+          // Append the canvas to the pdf container div
+          var $pdfContainer = jQuery("#pdfContainer");
+          /*
+          $pdfContainer.css("height", canvas.style.height)
+                       .css("width", canvas.style.width);
+          */
+          $pdfContainer.append($canvas);
 
-            //The following few lines of code set up scaling on the context if we are on a HiDPI display
-            var outputScale = getOutputScale(context);
-            if (outputScale.scaled) {
-                var cssScale = 'scale(' + (1 / outputScale.sx) + ', ' +
-                    (1 / outputScale.sy) + ')';
-                CustomStyle.setProp('transform', canvas, cssScale);
-                CustomStyle.setProp('transformOrigin', canvas, '0% 0%');
-
-                if ($textLayerDiv.get(0)) {
-                    CustomStyle.setProp('transform', $textLayerDiv.get(0), cssScale);
-                    CustomStyle.setProp('transformOrigin', $textLayerDiv.get(0), '0% 0%');
-                }
-            }
-
-            context._scaleX = outputScale.sx;
-            context._scaleY = outputScale.sy;
-            if (outputScale.scaled) {
-                context.scale(outputScale.sx, outputScale.sy);
-            }
-
-            console.log(page);
-            $pdfContainer.append('<div id="pdf-page"/>');
-            $pdfContainer.find('div#pdf-page:last-child').append($canvas).append($textLayerDiv);
-
-            page.getTextContent().then(function (textContent) {
-
-                var textLayer = new TextLayerBuilder({
-                    textLayerDiv: $textLayerDiv.get(0),
-                    pageIndex: 0
-                });
-
-                textLayer.setTextContent(textContent);
-
-                var renderContext = {
-                    canvasContext: context,
-                    viewport: viewport,
-                    textLayer: textLayer
-                };
-
-                page.render(renderContext);
+          //var canvasOffset = $canvas.offset();
+          var $textLayerDiv = jQuery("<div />")
+            .addClass("textLayer")
+            .css("height", canvas.style.height)
+            .css("width", canvas.style.width)
+            .offset({
+              top: canvas.offsetTop,
+              left: canvas.offsetLeft
             });
+
+          context._scaleX = outputScale.sx;
+          context._scaleY = outputScale.sy;
+          if (outputScale.scaled) {
+            context.scale(outputScale.sx, outputScale.sy);
+          }
+
+          $pdfContainer.append($textLayerDiv);
+
+          page.getTextContent().then(function (textContent) {
+            var textLayer = new TextLayerBuilder({
+              textLayerDiv: $textLayerDiv.get(0),
+              viewport: viewport,
+              pageIndex: 0
+            });
+            textLayer.setTextContent(textContent);
+
+            var renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+
+            page.render(renderContext);
+          });
         }
 
         loadPdf(file);

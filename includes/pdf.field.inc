@@ -19,6 +19,7 @@ function pdf_field_formatter_info() {
     ),
     'pdf_pages' => array(
       'label' => t('PDF: Continuous scroll'),
+      'description' => 'Don\'t use this to display big PDF file.',
       'field types' => array('file'),
       'settings'=>array('scale' => 1),
     ),
