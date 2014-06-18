@@ -124,6 +124,12 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
 }
 
 function theme_pdf_formatter_default($variables) {
+  $library = libraries_load('pdf.js');
+  if ($library['loaded'] == FALSE) {
+    drupal_set_message($library['error message'], 'error');
+    return 'Please download and install ' . l('pdf.js', $library['download url'] ) . '!';
+  }
+  
   $file_url = file_create_url($variables['file']->uri);
   $module_path = drupal_get_path('module', 'pdf');
   $library_path = libraries_get_path('pdf.js');
@@ -150,14 +156,16 @@ function theme_pdf_formatter_default($variables) {
     drupal_add_js($module_path . '/js/default.js');
   }
 
-  //drupal_add_css($module_path . '/css/pdf.css');
-
   return render($content);
 }
 
 function theme_pdf_formatter_thumbnail($variables) {
   $file_url = file_create_url($variables['file']->uri);
-  drupal_add_js(libraries_get_path('pdf.js') . '/build/pdf.js');
+  $library = libraries_load('pdf.js');
+  if ($library['loaded'] == FALSE) {
+    drupal_set_message($library['error message'], 'error');
+    return 'Please download and install ' . l('pdf.js', $library['download url'] ) . '!';
+  }
 
   $worker_loader = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
@@ -191,18 +199,14 @@ function theme_pdf_formatter_pages($variables) {
   $fid = $variables['file']->fid;
   drupal_add_css(drupal_get_path('module', 'pdf') . '/css/TextLayer.css');
   drupal_add_css(drupal_get_path('module', 'pdf') . '/css/pdf.css');
-  drupal_add_js(libraries_get_path('pdf.js') . '/build/generic/build/pdf.js');
-  drupal_add_js(libraries_get_path('pdf.js') . '/web/pdf_find_bar.js');
-  drupal_add_js(libraries_get_path('pdf.js') . '/web/pdf_find_controller.js');
-  drupal_add_js(libraries_get_path('pdf.js') . '/web/ui_utils.js');
-  drupal_add_js(libraries_get_path('pdf.js') . '/web/text_layer_builder.js');
-
+  $library = libraries_load('pdf.js', 'textlayer');
+  if ($library['loaded'] == FALSE) {
+    drupal_set_message($library['error message'], 'error');
+    return 'Please download and install ' . l('pdf.js', $library['download url'] ) . '!';
+  }
   $worker_loader = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   drupal_add_js($js, array('type' => 'inline'));
-//  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/TextLayerBuilder.js');
-//  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/AnnotationsLayerBuilder.js');
-//  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/PdfListView.js');
   drupal_add_js(drupal_get_path('module', 'pdf') . '/js/pdf.js');
   $link = array(
     'text' => $filename,
