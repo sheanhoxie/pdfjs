@@ -30,32 +30,32 @@ function pdf_theme() {
 function pdf_libraries_info() {
   $libraries['pdf.js'] = array(
     'name' => 'pdf.js',
-    'vendor url' => 'https://github.com/mozilla/pdf.js',
-    'download url' => 'https://github.com/mozilla/pdf.js/archive/master.zip',
+    'vendor url' => 'http://mozilla.github.io/pdf.js/',
+    'download url' => 'http://mozilla.github.io/pdf.js/getting_started/#download',
     'version arguments' => array(
-      'file' => 'build/generic/build/pdf.js',
+      'file' => 'build/pdf.js',
       'pattern' => '@PDFJS\.version\s=\s\'(.*)\'@',
       'lines' => 30,
     ),
     'files' => array(
       'js' => array(
-        'build/generic/build/pdf.js',
+        'build/pdf.js',
       ),
     ),
     'variants' => array(
       'viewer' => array(
-      ),
-      'built' => array(
         'files' => array(
           'js' => array(
-            'build/generic/build/pdf.js',
+            'build/pdf.js',
+            'web/viewer.js',
           ),
         ),
       ),
+      //DEV
       'textlayer' => array(
         'files' => array(
           'js' => array(
-            'build/generic/build/pdf.js',
+            'build/pdf.js',
             'web/pdf_find_bar.js',
             'web/pdf_find_controller.js',
             'web/ui_utils.js',
