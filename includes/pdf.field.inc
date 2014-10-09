@@ -195,11 +195,12 @@ function theme_pdf_formatter_thumbnail($variables) {
 
 function theme_pdf_formatter_pages($variables) {
   $scale = $variables['scale'];
+  $module_path = drupal_get_path('module', 'pdf');
   $file_url = file_create_url($variables['file']->uri);
   $filename = $variables['file']->filename;
   $fid = $variables['file']->fid;
-  drupal_add_css(drupal_get_path('module', 'pdf') . '/css/TextLayer.css');
-  drupal_add_css(drupal_get_path('module', 'pdf') . '/css/pdf.css');
+  drupal_add_css($module_path . '/css/TextLayer.css');
+  drupal_add_css($module_path . '/css/pdf.css');
   $library = libraries_load('pdf.js', 'viewer');
   if ($library['loaded'] == FALSE) {
     drupal_set_message($library['error message'], 'error');
@@ -208,7 +209,7 @@ function theme_pdf_formatter_pages($variables) {
   $worker_loader = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
   drupal_add_js($js, array('type' => 'inline'));
-  drupal_add_js(drupal_get_path('module', 'pdf') . '/js/pdf.js');
+  drupal_add_js($module_path . '/js/pdf.js');
   $link = array(
     'text' => $filename,
     'path' => $file_url,
