@@ -11,7 +11,7 @@ function pdf_theme() {
         'file' => NULL,
         'keep_pdfjs' => NULL,
         'width' => NULL,
-        'height' => Null,
+        'height' => NULL,
       ),
       'file' => 'includes/pdf.field.inc',
     ),
@@ -35,7 +35,7 @@ function pdf_theme() {
  */
 function pdf_libraries_info() {
   $libraries = array();
-  
+
   $libraries['pdf.js'] = array(
     'name' => 'pdf.js',
     'vendor url' => 'http://mozilla.github.io/pdf.js/',
@@ -59,7 +59,7 @@ function pdf_libraries_info() {
           ),
         ),
       ),
-      //DEV
+      // DEV.
       'textlayer' => array(
         'files' => array(
           'js' => array(
@@ -73,6 +73,6 @@ function pdf_libraries_info() {
       )
     ),
   );
-  
+
   return $libraries;
 }

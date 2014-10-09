@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Implements hook_field_formatter_info().
  */
@@ -8,7 +9,7 @@ function pdf_field_formatter_info() {
       'label' => t('PDF: Default viewer of PDF.js'),
       'description' => 'Use the default viewer like http://mozilla.github.io/pdf.js/web/viewer.html.',
       'field types' => array('file'),
-      'settings'=>array(
+      'settings' => array(
         'keep_pdfjs' => TRUE,
         'width' => '100px',
         'height' => '600px',
@@ -23,7 +24,7 @@ function pdf_field_formatter_info() {
       'label' => t('PDF: Continuous scroll'),
       'description' => 'Don\'t use this to display big PDF file.',
       'field types' => array('file'),
-      'settings'=>array('scale' => 1),
+      'settings' => array('scale' => 1),
     ),
   );
 }
@@ -59,7 +60,7 @@ function pdf_field_formatter_settings_form($field, $instance, $view_mode, $form,
       '#type' => 'textfield',
       '#title' => t('Set the scale of PDF pages'),
       '#default_value' => $settings['scale'],
-      //'#description' => t(''),
+      // '#description' => t(''),
     );
   }
   return $element;
@@ -72,7 +73,7 @@ function pdf_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
   if ($display['type'] == 'pdf_default') {
-    return t('Use pdf.js even users have PDF reader plugin: @keep_pdfjs', array('@keep_pdfjs' => $settings['keep_pdfjs'] ? t('Yes') : t('No'))) . '<br>' . t('Widht: @width , Height: @height', array('@width' => $settings['width'] , '@height' => $settings['height']) );
+    return t('Use pdf.js even users have PDF reader plugin: @keep_pdfjs', array('@keep_pdfjs' => $settings['keep_pdfjs'] ? t('Yes') : t('No'))) . '<br />' . t('Widht: @width , Height: @height', array('@width' => $settings['width'] , '@height' => $settings['height']));
   }
   if ($display['type'] == 'pdf_pages') {
     return t('Scale: @scale', array('@scale' => $settings['scale']));
@@ -89,10 +90,10 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
   switch ($display['type']) {
     case 'pdf_default':
       foreach ($items as $delta => $item) {
-        if ( strpos($item['filemime'], 'pdf' ) ) {
+        if (strpos($item['filemime'], 'pdf') ) {
           $element[$delta] = array(
             '#theme' => 'pdf_formatter_default',
-            '#file' => (object)$item,
+            '#file' => (object) $item,
             '#keep_pdfjs' => $settings['keep_pdfjs'],
             '#width'  => $settings['width'],
             '#height'  => $settings['height'],
@@ -102,7 +103,7 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
       break;
     case 'pdf_thumbnail':
       foreach ($items as $delta => $item) {
-        if ( strpos($item['filemime'], 'pdf' ) ) {
+        if (strpos($item['filemime'], 'pdf' )) {
           $element[$delta] = array(
             '#theme' => 'pdf_formatter_thumbnail',
             '#file' => (object)$item,
@@ -112,7 +113,7 @@ function pdf_field_formatter_view($entity_type, $entity, $field, $instance, $lan
       break;
     case 'pdf_pages':
       foreach ($items as $delta => $item) {
-        if ( strpos($item['filemime'], 'pdf' ) ) {
+        if (strpos($item['filemime'], 'pdf' )) {
           $element[$delta] = array(
             '#theme' => 'pdf_formatter_pages',
             '#file' => (object)$item,
@@ -129,7 +130,7 @@ function theme_pdf_formatter_default($variables) {
   $library = libraries_load('pdf.js');
   if ($library['loaded'] == FALSE) {
     drupal_set_message($library['error message'], 'error');
-    return 'Please download and install ' . l( $library['name'], $library['download url'] ) . '!';
+    return 'Please download and install ' . l($library['name'], $library['download url']) . '!';
   }
   $file_url = file_create_url($variables['file']->uri);
   $module_path = drupal_get_path('module', 'pdf');
@@ -165,7 +166,7 @@ function theme_pdf_formatter_thumbnail($variables) {
   $library = libraries_load('pdf.js');
   if ($library['loaded'] == FALSE) {
     drupal_set_message($library['error message'], 'error');
-    return 'Please download and install ' . l( $library['name'], $library['download url'] ) . '!';
+    return 'Please download and install ' . l($library['name'], $library['download url']) . '!';
   }
 
   $worker_loader = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
@@ -204,7 +205,7 @@ function theme_pdf_formatter_pages($variables) {
   $library = libraries_load('pdf.js', 'viewer');
   if ($library['loaded'] == FALSE) {
     drupal_set_message($library['error message'], 'error');
-    return 'Please download and install ' . l( $library['name'], $library['download url'] ) . '!';
+    return 'Please download and install ' . l($library['name'], $library['download url']) . '!';
   }
   $worker_loader = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
