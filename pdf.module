@@ -1,6 +1,9 @@
 <?php
 module_load_include('inc', 'pdf', '/includes/pdf.field');
 
+/**
+ * Implements hook_theme().
+ */
 function pdf_theme() {
   $theme = array(
     'pdf_formatter_default' => array(
@@ -27,6 +30,9 @@ function pdf_theme() {
   return $theme;
 }
 
+/**
+ * Implements hook_libraries_info().
+ */
 function pdf_libraries_info() {
   $libraries['pdf.js'] = array(
     'name' => 'pdf.js',
