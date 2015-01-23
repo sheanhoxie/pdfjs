@@ -77,6 +77,23 @@
         loadPdf(file);
 
       });
+      $('.pdf-thumbnail').each(function(){
+        var canvas = $(this)[0];
+        PDFJS.getDocument($(this).text()).then(function(pdf) {
+          pdf.getPage(1).then(function(page) {
+            var scale = 1;
+            var viewport = page.getViewport(scale);
+            var context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            var renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+            page.render(renderContext);
+          });
+        });
+      });
     }
   };
 })(jQuery);

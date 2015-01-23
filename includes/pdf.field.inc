@@ -171,26 +171,10 @@ function theme_pdf_formatter_thumbnail($variables) {
 
   $worker_loader = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
   $js = "PDFJS.workerSrc = '$worker_loader';";
-  $js .= "'use strict';
-  PDFJS.getDocument('$file_url').then(function(pdf) {
-    pdf.getPage(1).then(function(page) {
-      var scale = 1;
-      var viewport = page.getViewport(scale);
-      var canvas = document.getElementById('the-canvas');
-      var context = canvas.getContext('2d');
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-      var renderContext = {
-        canvasContext: context,
-        viewport: viewport
-      };
-      page.render(renderContext);
-    });
-  });
-  ";
-
-  drupal_add_js($js, array('type' => 'inline'));
-  $output = '<canvas id="the-canvas" style="width:99%; border:1px solid black;"/>';
+  $module_path = drupal_get_path('module', 'pdf');
+  drupal_add_js($module_path . '/js/pdf.js', array('scope' => 'footer'));
+  drupal_add_js($js, array('type' => 'inline', 'scope' => 'footer'));
+  $output = '<canvas class="pdf-thumbnail" style="width:99%; border:1px solid black;">' . $file_url . '</canvas>';
   return $output;
 }
 
