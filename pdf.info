@@ -3,4 +3,4 @@ description = Display PDF file in Drupal without external readers and plugins.
 
 core = 7.x
 dependencies[] = file
-dependencies[] = libraries
+dependencies[] = libraries (>=2.x)
