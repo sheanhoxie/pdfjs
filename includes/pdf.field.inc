@@ -11,7 +11,7 @@ function pdf_field_formatter_info() {
       'field types' => array('file'),
       'settings' => array(
         'keep_pdfjs' => TRUE,
-        'width' => '100px',
+        'width' => '100%',
         'height' => '600px',
       ),
     ),
