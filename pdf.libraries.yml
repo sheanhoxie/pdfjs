@@ -1,0 +1,14 @@
+css:
+  version: 1.x
+  css:
+    theme:
+      css/pdf.css: {}
+pdf.js:
+  version: 1.x
+  js:
+    js/pdf.js: {}
+default:
+  version: 1.x
+  js:
+    js/acrobat_detection.js: {}
+    js/default.js: {}

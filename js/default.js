@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal, drupalSettings) {
   Drupal.behaviors.pdf = {
     attach: function(context, settings) {
       var info = getAcrobatInfo();
@@ -29,7 +29,7 @@
       }
     }
   };
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);
 
 /**
  * Detect browser support for canvas.
