@@ -20,9 +20,6 @@ use Drupal\Core\Url;
  */
 class PdfDefault extends FormatterBase {
 
-  /**
-   * {@inheritdoc}
-   */
   public static function defaultSettings() {
     return array(
       'keep_pdfjs' => '',
@@ -31,9 +28,6 @@ class PdfDefault extends FormatterBase {
     ) + parent::defaultSettings();
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
@@ -60,9 +54,6 @@ class PdfDefault extends FormatterBase {
     return $elements;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function settingsSummary() {
     $summary = array();
 
@@ -79,50 +70,46 @@ class PdfDefault extends FormatterBase {
     return $summary;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $library = libraries_load('pdf.js');
-    if ($library['loaded'] == FALSE) {
-      drupal_set_message($library['error message'], 'error');
-      return t('Please download and install ') . \Drupal::l( $library['name'], Url::fromUri($library['download url'])) . '!';
-
-    }
-
     $elements = array();
-    foreach ($items as $delta => $item) {
-      $filename = $item->entity->getFilename();
-      if ($item->isDisplayed() && $item->entity && strpos($filename, 'pdf')) {
-        $file_url = file_create_url($item->entity->getFileUri());
-        $library_path = libraries_get_path('pdf.js');
-        $iframe_src = file_create_url($library_path . '/web/viewer.html') . '?file=' . rawurlencode($file_url);
-        $force_pdfjs = $this->getSetting('keep_pdfjs');
-        $content = array(
-          '#type' => 'html_tag',
-          '#tag' => 'iframe',
-          '#value' => $file_url,
-          '#attributes' => array(
-            'class' => array('pdf'),
-            'webkitallowfullscreen' => '',
-            'mozallowfullscreen' => '',
-            'allowfullscreen' => '',
-            'frameborder' => 'no',
-            'width' => $this->getSetting('width'),
-            'height' => $this->getSetting('height'),
-            'src' => $iframe_src,
-            'data-src' => $file_url,
-          ),
-        );
-        if ($force_pdfjs != TRUE) {
-          $attached['#attached']['library'][] = 'pdf/default';
-          //drupal_process_attached($attached);
+    if ($library['loaded']) {
+      foreach ($items as $delta => $item) {
+        $filename = $item->entity->getFilename();
+        if ($item->isDisplayed() && $item->entity && strpos($filename, 'pdf')) {
+          $file_url = file_create_url($item->entity->getFileUri());
+          $library_path = libraries_get_path('pdf.js');
+          $iframe_src = file_create_url($library_path . '/web/viewer.html') . '?file=' . rawurlencode($file_url);
+          $force_pdfjs = $this->getSetting('keep_pdfjs');
+          $html = array(
+            '#type' => 'html_tag',
+            '#tag' => 'iframe',
+            '#value' => $file_url,
+            '#attributes' => array(
+              'class' => array('pdf'),
+              'webkitallowfullscreen' => '',
+              'mozallowfullscreen' => '',
+              'allowfullscreen' => '',
+              'frameborder' => 'no',
+              'width' => $this->getSetting('width'),
+              'height' => $this->getSetting('height'),
+              'src' => $iframe_src,
+              'data-src' => $file_url,
+            ),
+          );
+          $elements[$delta] = array('#markup' => \Drupal::service('renderer')->render($html));
         }
-
-        $elements[$delta] = array('#markup' => \Drupal::service('renderer')->render($content));
+      }
+      if ($force_pdfjs != TRUE) {
+        $elements['#attached']['library'][] = 'pdf/default';
       }
     }
-
+    else {
+      drupal_set_message($library['error message'], 'error');
+      $elements[] = array(
+        '#markup' => t('Please download and install ') . \Drupal::l( $library['name'], Url::fromUri($library['download url'])) . '!'
+      );
+    }
     return $elements;
   }
 }

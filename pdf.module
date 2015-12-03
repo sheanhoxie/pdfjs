@@ -1,11 +1,8 @@
 <?php
-
-
 /**
  * Implements hook_libraries_info().
  */
 function pdf_libraries_info() {
-
   $libraries['pdf.js'] = array(
     'name' => 'pdf.js',
     'vendor url' => 'http://mozilla.github.io/pdf.js/',

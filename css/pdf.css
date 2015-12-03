@@ -1,13 +1,10 @@
-.pdf {
+.pdf-canvas {
   width: 100%;
+  border:1px solid black;
 }
 
 #pdf-page {
   position: relative;
-}
-
-.pdf-content canvas {
-  box-shadow: black 0px 0px 10px;
 }
 
 /* CSS classes used by TextLayerBuilder to style the text layer divs */
