@@ -1,9 +1,9 @@
-//(function ($, Drupal, drupalSettings) {
-//  Drupal.behaviors.pdf = {
-//    attach: function(context, settings) {
+(function ($, Drupal, drupalSettings) {
+  Drupal.behaviors.pdf = {
+    attach: function(context, settings) {
       PDFJS.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
 
-      var canvases = document.getElementsByClassName("pdf-thumbnail");
+      var canvases = context.getElementsByClassName("pdf-thumbnail");
       Array.prototype.forEach.call(canvases, function(canvas) {
         var file = canvas.attributes.file.value;
         PDFJS.getDocument(file).then(function(pdf) {
@@ -21,8 +21,8 @@
           });
         });
       });
-      
-      var fields = document.getElementsByClassName("pdf-pages");
+
+      var fields = context.getElementsByClassName("pdf-pages");
       Array.prototype.forEach.call(fields, function(container) {
         var file = container.attributes.file.value;
         PDFJS.getDocument(file).then(function(pdf) {
@@ -45,6 +45,6 @@
           }
         });
       });
-//    }
-//  };
-//})(jQuery, Drupal, drupalSettings);
+    }
+  };
+})(jQuery, Drupal, drupalSettings);
