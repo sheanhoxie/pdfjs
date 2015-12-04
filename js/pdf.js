@@ -1,14 +1,14 @@
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.pdf = {
     attach: function(context, settings) {
-      PDFJS.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+      PDFJS.workerSrc = settings.pdf.workerSrc;
 
       var canvases = context.getElementsByClassName("pdf-thumbnail");
       Array.prototype.forEach.call(canvases, function(canvas) {
         var file = canvas.attributes.file.value;
         PDFJS.getDocument(file).then(function(pdf) {
           pdf.getPage(1).then(function(page) {
-            var scale = 1.5;
+            var scale = (canvas.attributes.scale) ? canvas.attributes.scale.value : 1;;
             var viewport = page.getViewport(scale);
             var context = canvas.getContext('2d');
             canvas.height = viewport.height;

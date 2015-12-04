@@ -21,7 +21,7 @@ class PdfPages extends FormatterBase {
 
   public static function defaultSettings() {
     return array(
-      'scale' => '',
+      'scale' => 1,
     ) + parent::defaultSettings();
   }
 
@@ -71,6 +71,11 @@ class PdfPages extends FormatterBase {
       }
     }
     $elements['#attached']['library'][] = 'pdf/drupal.pdf';
+    $elements['#attached']['drupalSettings'] = array(
+      'pdf' => array(
+        'workerSrc' => 'https://mozilla.github.io/pdf.js/build/pdf.worker.js',
+      ),
+    );
     return $elements;
   }
 }
