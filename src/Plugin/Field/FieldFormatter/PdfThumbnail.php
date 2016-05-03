@@ -67,7 +67,7 @@ class PdfThumbnail extends FormatterBase {
     $elements = array();
     foreach ($items as $delta => $item) {
       $filename = $item->entity->getFilename();
-      if ($item->isDisplayed() && $item->entity && strpos($filename, 'pdf' ) ) {
+      if ($item->entity->getMimeType() == 'application/pdf') {
         $file_url = file_create_url($item->entity->getFileUri());
         $html = array(
           '#type' => 'html_tag',
@@ -85,13 +85,31 @@ class PdfThumbnail extends FormatterBase {
           '#markup' => \Drupal::service('renderer')->render($html),
         );
       }
+      else {
+        $elements[$delta] = array (
+            '#theme' => 'file_link',
+            '#file' => $item->entity,
+        );
+      }
     }
     $elements['#attached']['library'][] = 'pdf/drupal.pdf';
-    $elements['#attached']['drupalSettings'] = array(
-      'pdf' => array(
-        'workerSrc' => 'https://mozilla.github.io/pdf.js/build/pdf.worker.js',
-      ),
-    );
+    $library = libraries_load('pdf.js');
+    if ($library['loaded']) {
+      $worker = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
+      $elements['#attached']['drupalSettings'] = array(
+        'pdf' => array(
+          'workerSrc' => $worker,
+        ),
+      );
+    }
+    else {
+      $elements['#attached']['drupalSettings'] = array(
+        'pdf' => array(
+          'workerSrc' => 'https://mozilla.github.io/pdf.js/build/pdf.worker.js',
+        ),
+      );
+    }
+
     return $elements;
   }
 }

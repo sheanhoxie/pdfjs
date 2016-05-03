@@ -22,8 +22,8 @@ class PdfDefault extends FormatterBase {
 
   public static function defaultSettings() {
     return array(
-      'keep_pdfjs' => '',
-      'width' => '',
+      'keep_pdfjs' => true,
+      'width' => '100%',
       'height' => '',
     ) + parent::defaultSettings();
   }
@@ -75,11 +75,9 @@ class PdfDefault extends FormatterBase {
     $elements = array();
     if ($library['loaded']) {
       foreach ($items as $delta => $item) {
-        $filename = $item->entity->getFilename();
-        if ($item->isDisplayed() && $item->entity && strpos($filename, 'pdf')) {
+        if ($item->entity->getMimeType() == 'application/pdf') {
           $file_url = file_create_url($item->entity->getFileUri());
-          $library_path = libraries_get_path('pdf.js');
-          $iframe_src = file_create_url($library_path . '/web/viewer.html') . '?file=' . rawurlencode($file_url);
+          $iframe_src = file_create_url(libraries_get_path('pdf.js') . '/web/viewer.html') . '?file=' . rawurlencode($file_url);
           $force_pdfjs = $this->getSetting('keep_pdfjs');
           $html = array(
             '#type' => 'html_tag',
@@ -98,6 +96,12 @@ class PdfDefault extends FormatterBase {
             ),
           );
           $elements[$delta] = array('#markup' => \Drupal::service('renderer')->render($html));
+        }
+        else {
+          $elements[$delta] = array (
+              '#theme' => 'file_link',
+              '#file' => $item->entity,
+          );
         }
       }
       if ($force_pdfjs != TRUE) {

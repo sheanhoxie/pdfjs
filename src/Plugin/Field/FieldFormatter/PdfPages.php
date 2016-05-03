@@ -51,7 +51,7 @@ class PdfPages extends FormatterBase {
     $elements = array();
     foreach ($items as $delta => $item) {
       $filename = $item->entity->getFilename();
-      if ($item->isDisplayed() && $item->entity && strpos($filename, 'pdf') ) {
+      if ($item->entity->getMimeType() == 'application/pdf') {
         $scale = $this->getSetting('scale');
         $file_url = file_create_url($item->entity->getFileUri());
         $html = array(
@@ -69,8 +69,15 @@ class PdfPages extends FormatterBase {
           '#markup' => \Drupal::service('renderer')->render($html),
         );
       }
+      else {
+        $elements[$delta] = array (
+            '#theme' => 'file_link',
+            '#file' => $item->entity,
+        );
+      }
     }
     $elements['#attached']['library'][] = 'pdf/drupal.pdf';
+    $library = libraries_load('pdf.js');
     $elements['#attached']['drupalSettings'] = array(
       'pdf' => array(
         'workerSrc' => 'https://mozilla.github.io/pdf.js/build/pdf.worker.js',
