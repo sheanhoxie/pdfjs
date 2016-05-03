@@ -1,4 +1,7 @@
 <?php
+
+use Drupal\Core\Url;
+
 /**
  * Implements hook_libraries_info().
  */
@@ -9,14 +12,16 @@ function pdf_libraries_info() {
     'download url' => 'http://mozilla.github.io/pdf.js/getting_started/#download',
     'version arguments' => array(
       'file' => 'build/pdf.js',
-      'pattern' => '@PDFJS\.version\s=\s\'(.*)\'@',
-      'lines' => 30,
+      'pattern' => '/ersion\s=\s\'(.*)\'/',
+      'lines' => 32,
     ),
     'files' => array(
       'js' => array(
         'build/pdf.js',
+        'pdf.worker.js',
       ),
     ),
+      /*
     'variants' => array(
       'viewer' => array(
         'files' => array(
@@ -39,6 +44,25 @@ function pdf_libraries_info() {
         ),
       )
     ),
+      */
   );
   return $libraries;
+}
+/**
+ * Implements hook_requirements().
+ */
+function pdf_requirements($phase) {
+    $requirements = array();
+    $library = libraries_load('pdf.js');
+    if ($library['installed']) {
+      $description = t('@version', array('@version' => $library['version']));
+    }
+    else {
+      $requirements['pdf']['severity'] = REQUIREMENT_ERROR;
+      $description = t('Not available (Download from <a href=":url">http://mozilla.github.io/pdf.js</a>)', array(':url' => $library['download url']));
+    }
+    //$js = \Drupal::service('library.discovery')->getLibraryByName('pdf', 'mozilla.pdf.js');
+    $requirements['pdf']['title'] = t('PDF.js');
+    $requirements['pdf']['value'] = $description;
+    return $requirements;
 }
