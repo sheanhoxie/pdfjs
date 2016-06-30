@@ -18,7 +18,7 @@ function pdf_libraries_info() {
     'files' => array(
       'js' => array(
         'build/pdf.js',
-        'pdf.worker.js',
+        'build/pdf.worker.js',
       ),
     ),
       /*
