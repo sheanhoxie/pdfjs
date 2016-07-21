@@ -1,7 +1,4 @@
-<?php /**
- * @file
- * Contains \Drupal\pdf\Plugin\Field\FieldFormatter\PdfDefault.
- */
+<?php
 
 namespace Drupal\pdf\Plugin\Field\FieldFormatter;
 

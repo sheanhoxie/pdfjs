@@ -1,7 +1,5 @@
-<?php /**
- * @file
- * Contains \Drupal\pdf\Plugin\Field\FieldFormatter\PdfPages.
- */
+<?php
+
 namespace Drupal\pdf\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
@@ -78,11 +76,21 @@ class PdfPages extends FormatterBase {
     }
     $elements['#attached']['library'][] = 'pdf/drupal.pdf';
     $library = libraries_load('pdf.js');
-    $elements['#attached']['drupalSettings'] = array(
-      'pdf' => array(
-        'workerSrc' => 'https://mozilla.github.io/pdf.js/build/pdf.worker.js',
-      ),
-    );
+    if ($library['loaded']) {
+      $worker = file_create_url(libraries_get_path('pdf.js') . '/build/pdf.worker.js');
+      $elements['#attached']['drupalSettings'] = array(
+        'pdf' => array(
+          'workerSrc' => $worker,
+        ),
+      );
+    }
+    else {
+      $elements['#attached']['drupalSettings'] = array(
+        'pdf' => array(
+          'workerSrc' => 'https://mozilla.github.io/pdf.js/build/pdf.worker.js',
+        ),
+      );
+    }
     return $elements;
   }
 }

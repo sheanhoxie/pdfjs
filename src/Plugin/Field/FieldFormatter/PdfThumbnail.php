@@ -1,7 +1,5 @@
-<?php /**
- * @file
- * Contains \Drupal\pdf\Plugin\Field\FieldFormatter\PdfThumbnail.
- */
+<?php
+
 namespace Drupal\pdf\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
@@ -62,7 +60,7 @@ class PdfThumbnail extends FormatterBase {
     }
     return $summary;
   }
-  
+
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
     foreach ($items as $delta => $item) {
