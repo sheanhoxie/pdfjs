@@ -3,5 +3,4 @@ description: 'Display PDF file in Drupal without external readers and plugins.'
 core: 8.x
 dependencies:
   - file
-  - libraries
 type: module
