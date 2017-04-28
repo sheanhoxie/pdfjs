@@ -12,23 +12,5 @@
   "support": {
     "issues": "https://www.drupal.org/project/issues/pdf"
   },
-  "license": "GPL-2.0+",
-  "repositories": [
-    {
-      "type": "package",
-      "package": {
-        "name": "mozilla/pdf.js",
-        "version": "dev-master",
-        "type": "drupal-library",
-        "source": {
-          "url": "https://github.com/mozilla/pdf.js",
-          "type": "git",
-          "reference": "origin/gh-pages"
-        }
-      }
-    }
-  ],
-  "require": {
-    "mozilla/pdf.js": "*"
-  }
+  "license": "GPL-2.0+"
 }
