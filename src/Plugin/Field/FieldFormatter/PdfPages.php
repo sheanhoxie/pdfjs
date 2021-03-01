@@ -72,7 +72,7 @@ class PdfPages extends FormatterBase {
       }
     }
     $elements['#attached']['library'][] = 'pdf/drupal.pdf';
-    $worker = file_create_url('/libraries/pdf.js/es5/build/pdf.worker.js');
+    $worker = file_create_url('/libraries/pdf.js/legacy/build/pdf.worker.js');
     $elements['#attached']['drupalSettings'] = [
       'pdf' => [
         'workerSrc' => $worker,

@@ -75,7 +75,7 @@ class PdfDefault extends FormatterBase {
     foreach ($items as $delta => $item) {
       if ($item->entity->getMimeType() == 'application/pdf') {
         $file_url = file_create_url($item->entity->getFileUri());
-        $iframe_src = file_create_url('/libraries/pdf.js/es5/web/viewer.html') . '?file=' . rawurlencode($file_url);
+        $iframe_src = file_create_url('/libraries/pdf.js/legacy/web/viewer.html') . '?file=' . rawurlencode($file_url);
         $html = [
           '#theme' => 'file_pdf',
           '#attributes' => [
