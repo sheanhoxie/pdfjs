@@ -56,7 +56,7 @@ class PdfThumbnail extends FormatterBase {
       $summary[] = $this->t('No settings');
     }
     else {
-      $summary[] = t('Scale: @scale, Widht: @width, Height: @height', [
+      $summary[] = t('Scale: @scale, Width: @width, Height: @height', [
         '@scale' => $scale,
         '@width' => $width,
         '@height' => $height
@@ -92,7 +92,7 @@ class PdfThumbnail extends FormatterBase {
       }
     }
     $elements['#attached']['library'][] = 'pdf/drupal.pdf';
-    $worker = file_create_url('/libraries/pdf.js/legacy/build/pdf.worker.js');
+    $worker = file_create_url(base_path() . 'libraries/pdf.js/build/pdf.worker.js');
     $elements['#attached']['drupalSettings'] = [
       'pdf' => [
         'workerSrc' => $worker,

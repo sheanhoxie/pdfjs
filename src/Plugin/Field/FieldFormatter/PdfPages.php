@@ -59,7 +59,7 @@ class PdfPages extends FormatterBase {
             'class' => ['pdf-pages'],
             'id' => ['pdf-pages-' . $delta],
             'file' => [$file_url],
-            'scale' => [$scale]
+            'scale' => [$scale],
           ],
         ];
         $elements[$delta] = $html;
@@ -72,7 +72,7 @@ class PdfPages extends FormatterBase {
       }
     }
     $elements['#attached']['library'][] = 'pdf/drupal.pdf';
-    $worker = file_create_url('/libraries/pdf.js/legacy/build/pdf.worker.js');
+    $worker = file_create_url(base_path() . 'libraries/pdf.js/build/pdf.worker.js');
     $elements['#attached']['drupalSettings'] = [
       'pdf' => [
         'workerSrc' => $worker,
