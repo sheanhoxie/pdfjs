@@ -1,16 +1,6 @@
 {
-  "name": "drupal/pdf",
+  "name": "savvier/pdfjs",
   "description": "Display PDF file in Drupal without external readers and plugins.",
   "type": "drupal-module",
-  "homepage": "http://drupal.org/project/pdf",
-  "authors": [
-    {
-      "name": "Liang Shen",
-      "homepage": "https://www.drupal.org/u/shenzhuxi"
-    }
-  ],
-  "support": {
-    "issues": "https://www.drupal.org/project/issues/pdf"
-  },
   "license": "GPL-2.0+"
 }
